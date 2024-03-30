@@ -1,39 +1,80 @@
 import pandas as pd
-import time
+import subprocess
+import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Define example Python files
-example_files = ["test_groupby.py", "test_head_tail.py", "test_io.py", "test_join.py", "test_setops.py", "test_shuffle.py", "test_sort.py"]
+# List of example Python files
+example_files = [
+    "test_groupby.py",
+    # "test_head_tail.py",
+    # "test_io.py",
+    # "test_join.py",
+    # "test_setops.py",
+    # "test_shuffle.py",
+    # "test_sort.py",
+]
 
-# Define CSV files
-csv_files = ["benchmarking_data_76800.csv", "benchmarking_data_768000.csv", "benchmarking_data_7680000.csv", "benchmarking_data_76800000.csv"]
+args = [
+    "Pregnancies",
+]
 
-# Initialize empty lists to store runtimes
-runtimes = []
+# List of CSV files
+csv_files = [
+    "data/benchmarking_data_76800.csv",
+    "data/benchmarking_data_768000.csv",
+    "data/benchmarking_data_7680000.csv",
+    "data/benchmarking_data_76800000.csv",
+]
+
+# List of Sizes
+sizes = [76800, 768000, 7680000, 76800000]
+
+# Dictionary to store execution times
+execution_times = {}
 
 # Iterate through example files
 for file in example_files:
+    execution_times[file] = []
+
+    # Iterate through CSV files
+    argCount = 0
     for csv_file in csv_files:
-        start_time = time.time()
-        # Execute each example file with pandas
-        exec(open(file).read())
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        runtimes.append(elapsed_time)
-        print(f"Execution time for {file} with {csv_file}: {elapsed_time:.2f} seconds")
+        # Run the Python script with subprocess and capture output
+        result = subprocess.run(
+            ["python", file, csv_file, args[argCount]],
+            capture_output=True,
+            text=True
+        )
 
-# Reshape runtimes list for plotting
-runtimes_matrix = [runtimes[i:i+len(csv_files)] for i in range(0, len(runtimes), len(csv_files))]
+        # Check if the subprocess ran successfully
+        if result.returncode == 0:
+            output = result.stdout
+        else:
+            print(f"Error running subprocess for {file} with {csv_file}:")
+            print(result.stderr)
+            continue
 
-# Plotting
+        # Extract execution time from output
+        execution_time = float(output)
+        execution_times[file].append(execution_time)
+    argCount += 1
+
+# Print execution times for debugging
+print("Execution Times:", execution_times)
+
+# Plotting with Seaborn
 plt.figure(figsize=(10, 6))
-for i, file in enumerate(example_files):
-    plt.plot(csv_files, runtimes_matrix[i], label=file)
-plt.xlabel('CSV Files')
-plt.ylabel('Execution Time (seconds)')
-plt.title('Pandas Execution Time for Different Example Files and CSVs')
+for file, times in execution_times.items():
+    sns.lineplot(x=sizes, y=times, label=file, marker='o')
+
+plt.xlabel("File Size")
+plt.ylabel("Execution Time (seconds)")
+plt.title("Pandas Execution Time for Different Example Files and CSVs")
 plt.legend()
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.show()
 
+
+
+# Show plot
+plt.show()

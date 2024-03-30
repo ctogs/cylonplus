@@ -1,10 +1,8 @@
 import pandas as pd
 from parallel_pandas import ParallelPandas
 import time
+import sys
 
-FILES = ["cities_a_0", "cities_a_1", "cities_a_2", "cities_a_3", "csv_with_null1_0", "csv_with_null1_1", "csv_with_null1_2", "csv_with_null1_3", "csv1_0", "csv1_1", "csv1_2", "csv1_3"]
-
-GROUP_IDS = ["state_id","state_id","state_id","state_id","0","0","0","0","0","0","0","0"]
 N_CPU = 16
 SPLIT_FACTOR = 4
 
@@ -20,17 +18,19 @@ class Stopwatch:
         self.elapsed_time = self.end_time - self.start_time
 
 if __name__ == "__main__":
-    # Start stopwatch
-    file = sys.argv[1]
+
+    #get file and group_id input:
+    csv_file = sys.argv[1]
     group_id = sys.argv[2]
 
-    for i in range(len(FILES)):
-            # Load CSV files into pandas dataframes
-        df1 = pd.read_csv(f'{file}')
-        # print(df1.head())
-        with Stopwatch() as sw:
-            # Perform groupby operation
-            result_df = df1.groupby(group_id)
+    #Start stopwatch
+    with Stopwatch() as sw:
 
-        # Print time taken for groupby operation
-        # print("Time taken for groupby operation: {:.4f} seconds".format(sw.elapsed_time))
+        # Load CSV files into pandas dataframes
+        df1 = pd.read_csv(f'{csv_file}')
+        
+        # Perform groupby operation
+        result_df = df1.groupby(group_id)
+
+    # Print time taken for groupby operation
+    print("{:.4f}".format(sw.elapsed_time))
