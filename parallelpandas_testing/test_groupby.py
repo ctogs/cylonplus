@@ -21,13 +21,16 @@ class Stopwatch:
 
 if __name__ == "__main__":
     # Start stopwatch
+    file = sys.argv[1]
+    group_id = sys.argv[2]
+
     for i in range(len(FILES)):
             # Load CSV files into pandas dataframes
-        df1 = pd.read_csv(f'../data/input/{FILES[i]}.csv')
-        print(df1.head())
+        df1 = pd.read_csv(f'{file}')
+        # print(df1.head())
         with Stopwatch() as sw:
             # Perform groupby operation
-            result_df = df1.groupby(GROUP_IDS[i])
+            result_df = df1.groupby(group_id)
 
         # Print time taken for groupby operation
-        print("Time taken for groupby operation: {:.4f} seconds".format(sw.elapsed_time))
+        # print("Time taken for groupby operation: {:.4f} seconds".format(sw.elapsed_time))
