@@ -3,19 +3,48 @@ import subprocess
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-# List of example Python files
+# List of Python files
 example_files = [
     "test_groupby.py",
-    # "test_head_tail.py",
-    # "test_io.py",
-    # "test_join.py",
-    # "test_setops.py",
-    # "test_shuffle.py",
-    # "test_sort.py",
+    "test_head.py",
+    "test_tail.py",
+    "test_io.py",
+    "test_difference.py",
+    "test_drop_duplicates.py",
+    # "test_intersection", #takes a very long time
+    "test_union",
+    "test_join.py",
+    "test_shuffle.py",
+    "test_sort.py",
 ]
 
 args = [
     "Pregnancies",
+    "",
+    "",
+    "",
+    "",
+    "",
+    # "Pregnancies",  #takes a very long time
+    "",
+    "Pregnancies",
+    "",
+    "Pregnancies",
+
+]
+
+num_files = [
+    1,
+    1,
+    1,
+    1,
+    2,
+    1,
+    # 2,  #takes a very long time
+    2,
+    2,
+    1,
+    1,
 ]
 
 # List of CSV files
@@ -40,11 +69,18 @@ for file in example_files:
     argCount = 0
     for csv_file in csv_files:
         # Run the Python script with subprocess and capture output
-        result = subprocess.run(
-            ["python", file, csv_file, args[argCount]],
-            capture_output=True,
-            text=True
-        )
+        if(num_files[argCount] == 1):
+            result = subprocess.run(["python", file, csv_file, args[argCount]],
+                capture_output=True,
+                text=True
+            )
+        elif(num_files[argCount] == 2):
+            result = subprocess.run(["python", file, csv_file, csv_file, args[argCount]],
+                capture_output=True,
+                text=True
+            )
+        else:
+            print("Not a valid number of files")
 
         # Check if the subprocess ran successfully
         if result.returncode == 0:

@@ -23,11 +23,11 @@ if __name__ == "__main__":
     csv_file = sys.argv[1]
     group_id = sys.argv[2]
 
+    # Load CSV files into pandas dataframes
+    df1 = pd.read_csv(f'{csv_file}')
+
     #Start stopwatch
     with Stopwatch() as sw:
-
-        # Load CSV files into pandas dataframes
-        df1 = pd.read_csv(f'{csv_file}')
         
         # Perform groupby operation
         result_df = df1.groupby(group_id)

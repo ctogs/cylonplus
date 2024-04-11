@@ -1,10 +1,11 @@
 import pandas as pd
-import time
 from parallel_pandas import ParallelPandas
+import time
 import sys
 
 N_CPU = 16
 SPLIT_FACTOR = 4
+
 ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
@@ -27,8 +28,8 @@ if __name__ == "__main__":
     #Start stopwatch
     with Stopwatch() as sw:
         
-        # Perform groupby operation
-        result_df = df1.sample(frac = 1)
+        # Perform head operation
+        result_df = df1.tail()
 
-    # Print time taken for groupby operation
+    # Print time taken for head operation
     print("{:.4f}".format(sw.elapsed_time))

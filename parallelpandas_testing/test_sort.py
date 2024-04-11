@@ -1,10 +1,7 @@
 import pandas as pd
 import time
 from parallel_pandas import ParallelPandas
-
-SORT_FILES = ["sales_nulls_nunascii_0", "sales_nulls_nunascii_1", "sales_nulls_nunascii_2", "sales_nulls_nunascii_3"]
-
-SORT_IDS = ["Unit Price","Unit Price","Unit Price","Unit Price"]
+import sys
 
 N_CPU = 16
 SPLIT_FACTOR = 4
@@ -20,15 +17,19 @@ class Stopwatch:
         self.elapsed_time = self.end_time - self.start_time
 
 if __name__ == "__main__":
-    # Start stopwatch
-    for i in range(len(SORT_FILES)):
-            # Load CSV files into pandas dataframes
-        df = pd.read_csv(f'../data/mpiops/{SORT_FILES[i]}.csv')
-        print(df.head())
-        with Stopwatch() as sw:
-            # Perform sort operation
-            result_df = df.sort_values(by=SORT_IDS[i])
 
-        # Print time taken for sort operation
-        print("Time taken for shuffle operation: {:.4f} seconds".format(sw.elapsed_time))
-        print("Size of File: {:.1f} instances".format(df.shape[0]))
+    #get file and group_id input:
+    csv_file = sys.argv[1]
+    sort_id = sys.argv[2]
+
+    # Load CSV files into pandas dataframes
+    df1 = pd.read_csv(f'{csv_file}')
+
+    #Start stopwatch
+    with Stopwatch() as sw:
+        
+        #sort operation
+        result_df = df1.sort_values(by=sort_id)
+
+    # Print time taken for groupby operation
+    print("{:.4f}".format(sw.elapsed_time))
