@@ -11,7 +11,8 @@ The tests currently include:
 Each of the different Pandas folders contain their respective READMEs to run the test files.
 
 ## Installation instructions
-```
+
+```bash
 ssh your_computing_id@gpusrv08 -J your_computing_id@portal.cs.virginia.edu
 git clone https://github.com/arupcsedu/cylonplus.git
 cd cylonplus
@@ -21,10 +22,12 @@ conda create -n cyp-venv python=3.11
 conda activate cyp-venv
 
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
-DIR=/u/djy8hg/anaconda3/envs/cyp-venv 
+DIR=/u/$USER/anaconda3/envs/cyp-venv 
 
 export CUDA_HOME=$DIR/bin
-export PATH=$DIR/bin:$PATH LD_LIBRARY_PATH=$DIR/lib:$LD_LIBRARY_PATH PYTHONPATH=$DIR/lib/python3.11/site-packages 
+export PATH=$DIR/bin:$PATH
+export LD_LIBRARY_PATH=$DIR/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=$DIR/lib/python3.11/site-packages 
 
 pip install petastorm
 
