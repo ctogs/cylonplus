@@ -87,6 +87,12 @@ rivanna>
   pip install petastorm
 ```
 
+once converted to a slurm script called `install.slurm` execute
+
+```bash
+sbatch install.slurm
+```
+
 ### Running the program
 
 create a slurm script that includes 
@@ -99,5 +105,8 @@ cd src/model
 python multi-gpu-cnn.py
 ```
 
-sbatch script.slurm
+submit the script
 
+```bash
+sbatch script.slurm
+```
