@@ -1,11 +1,6 @@
 import pandas as pd
 import time
-from parallel_pandas import ParallelPandas
 import sys
-
-N_CPU = 16
-SPLIT_FACTOR = 4
-ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
     def __enter__(self):
@@ -20,6 +15,7 @@ if __name__ == "__main__":
 
     #get file and group_id input:
     csv_file = sys.argv[1]
+    sort_id = sys.argv[2]
 
     # Load CSV files into pandas dataframes
     df1 = pd.read_csv(f'{csv_file}')
@@ -27,8 +23,8 @@ if __name__ == "__main__":
     #Start stopwatch
     with Stopwatch() as sw:
         
-        # Perform groupby operation
-        result_df = df1.sample(frac = 1)
+        #sort operation
+        result_df = df1.sort_values(by=sort_id)
 
     # Print time taken for groupby operation
     print("{:.4f}".format(sw.elapsed_time))

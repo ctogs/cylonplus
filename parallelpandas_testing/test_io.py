@@ -1,10 +1,11 @@
 import pandas as pd
 import time
 from parallel_pandas import ParallelPandas
+import sys
 
 N_CPU = 16
 SPLIT_FACTOR = 4
-FILES = ["sales_nulls_nunascii_0", "sales_nulls_nunascii_1", "sales_nulls_nunascii_2", "sales_nulls_nunascii_3"]
+
 ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
@@ -17,13 +18,15 @@ class Stopwatch:
         self.elapsed_time = self.end_time - self.start_time
 
 if __name__ == "__main__":
-    # Start stopwatch
-    for i in range(len(FILES)):
-            # Load CSV files into pandas dataframes
-        with Stopwatch() as sw:
-            # Perform read input operation
-            df = pd.read_csv(f'../data/mpiops/{FILES[i]}.csv')
+
+    #get file and group_id input:
+    csv_file = sys.argv[1]
+
+    #Start stopwatch
+    with Stopwatch() as sw:
         
-        # Print time taken for operation
-        print("Time taken for read input operation: {:.8f} seconds".format(sw.elapsed_time))
-        print("Size of File: {:.1f} instances".format(df.shape[0]))
+        # Load CSV files into pandas dataframes
+        df1 = pd.read_csv(f'{csv_file}')
+
+    # Print time taken for reading operation
+    print("{:.4f}".format(sw.elapsed_time))

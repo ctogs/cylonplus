@@ -1,11 +1,6 @@
 import pandas as pd
 import time
-from parallel_pandas import ParallelPandas
 import sys
-
-N_CPU = 16
-SPLIT_FACTOR = 4
-ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
     def __enter__(self):
