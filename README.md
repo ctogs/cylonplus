@@ -4,6 +4,8 @@ High-Performance Distributed Data frames for Machine Learning/Deep Learning Mode
 
 ## Installation instructions UVA CS cluster
 
+Useful information aboyt the portal cluster is available at <https://www.cs.virginia.edu/wiki/doku.php?id=compute_portal>
+
 ### Login to cluster
 
 ```bash
