@@ -66,7 +66,7 @@ cd $PROJECT
 
 ### Setup Cylon
 
-TODO: bets to convert to slurm script and run on node as batch script
+TODO: best to convert to slurm script and run on node as batch script
 
 ```bash
 rivanna>
