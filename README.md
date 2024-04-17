@@ -73,13 +73,13 @@ rivanna>
   cd cylonplus
   module load anaconda3
 
-  conda create --prefix=$PROJECT/anaconda3/envs/cyp-venv cyp-venv python=3.11
-  conda activate --prefix=$PROJECT/anaconda3/envs/cyp-venv
+  conda create --prefix=$PROJECT/CYLONPLUS cyp-venv python=3.11
+  conda activate --prefix=$PROJECT/CYLONPLUS
 
   conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 
-  export PYTHON_DIR=$PROJECT/anaconda3/envs
-  export CUDA_HOME=$PYTHON_DIR/bin
+  export PYTHON_DIR=$PROJECT/CYLONPLUS #?
+  export CUDA_HOME=$PYTHON_DIR/bin # should that be cuda prefix?
   export PATH=$PYTHON_DIR/bin:$PATH
   export LD_LIBRARY_PATH=$PYTHON_DIR/lib:$LD_LIBRARY_PATH
   export PYTHONPATH=$PYTHON_DIR/lib/python3.11/site-packages 
