@@ -42,7 +42,8 @@ python multi-gpu-cnn.py
 
 ## Installation instructions UVA Rivanna cluster
 
-We assume that you are able to ssh into rivanna instead of using the ondemand system. This is easily done by following instructions given on <https://infomall.org>. Make sure to modify your .ssh/config file and add the host rivanna.
+We assume that you are able to ssh into rivanna instead of using the ondemand system. This is easily done by following instructions given on <https://infomall.org>. Make sure to modify your .ssh/config file and add the host rivanna according to <https://infomall.org/uva/docs/tutorial/rivanna/>.
+
 If you use Windows we recommand not to use putty but use gitbash as it mimics a bash environment that is typical also for Linux systems and thus we only have to maintaine one documentation.
 
 ### Login to cluster
