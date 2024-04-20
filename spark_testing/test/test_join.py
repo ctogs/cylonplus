@@ -34,6 +34,6 @@ if __name__ == "__main__":
     with Stopwatch() as sw:
         result_df = df1.join(df2, df1[join_id] == df2[join_id])
 
-    print("Time taken for join operation: {:.4f} seconds".format(sw.elapsed_time))
+    print("{:.4f}".format(sw.elapsed_time))
 
     spark.stop()

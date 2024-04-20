@@ -30,7 +30,7 @@ if __name__ == "__main__":
     with Stopwatch() as sw:
         result_df = df.withColumn("rand", rand()).orderBy("rand")
 
-    print("Time taken for shuffle operation: {:.4f} seconds".format(sw.elapsed_time))
+    print("{:.4f}".format(sw.elapsed_time))
 
     # Stop Spark session
     spark.stop()

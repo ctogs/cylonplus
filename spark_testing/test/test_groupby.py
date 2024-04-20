@@ -30,6 +30,6 @@ if __name__ == "__main__":
     with Stopwatch() as sw:
         grouped_df = df.groupBy(group_id).count()
 
-    print("Time taken for groupby operation: {:.4f} seconds".format(sw.elapsed_time))
+    print("{:.4f}".format(sw.elapsed_time))
 
     spark.stop()

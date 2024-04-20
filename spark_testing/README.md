@@ -26,17 +26,5 @@ Follow these steps to set up a Conda environment and install the required librar
 ## Import the relevant data for scaling tests
 Run the import_csv.py file with the conda environment activated to import the relevant data. To save space later on, you can delete these files after the tests are run because they can always be redownloaded.:
 ```bash
-python import_csv.py #assuming you are in the data folder
+python import_csv.py #WILL CHANGE THIS
 ```
-
-## Step 3: Run the SLURM Script with Conda Environment Enabled
-
-After installing the Conda environment and the required libraries, you can run your SLURM script with the Conda environment enabled.
-
-```bash
-sbatch testing_script.slurm # to run the slurm script
-squeue -u <user> #to see the job 
-scancel <ID> #to cancel the job
-```
-
-You can see the produced graphs to compare the dataframe in the "plots" folder. 

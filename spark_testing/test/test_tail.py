@@ -27,13 +27,9 @@ if __name__ == "__main__":
 
     df = spark.read.csv(f'{csv_file}', header=True, inferSchema=True)
 
-    with Stopwatch() as sw1:
-        result_df = df.limit(5)
-
     with Stopwatch() as sw2:
         result_df = df.orderBy(df.columns[0], ascending=False).limit(5)
 
-    print("Time taken for head operation: {:.8f} seconds".format(sw1.elapsed_time))
-    print("Time taken for tail operation: {:.8f} seconds".format(sw2.elapsed_time))
+    print("{:.8f}".format(sw2.elapsed_time))
 
     spark.stop()

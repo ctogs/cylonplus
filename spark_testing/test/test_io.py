@@ -27,6 +27,6 @@ if __name__ == "__main__":
     with Stopwatch() as sw:
         df = spark.read.csv(f'{csv_file}', header=True, inferSchema=True)
     
-    print("Time taken for read input operation: {:.8f} seconds".format(sw.elapsed_time))
+    print("{:.8f}".format(sw.elapsed_time))
 
     spark.stop()
