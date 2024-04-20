@@ -4,6 +4,7 @@ import subprocess
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 # List of Python files
 example_files = [
@@ -101,31 +102,18 @@ for file, arg, num_file in zip(example_files, args, num_files):
 # Notify completion
 print("All Tests Finished")
 
-# Plotting
-for file, times in execution_times.items():
-    plt.figure(figsize=(10, 6))
-    
-    # Moving average
-    smoothed_times = np.convolve(times, np.ones(3)/3, mode='valid')
-    
-    sns.lineplot(x=row_counts[:len(smoothed_times)], y=smoothed_times, marker='o')
-    
-    plt.xlabel("Number of Rows")
-    plt.ylabel("Execution Time (seconds)")
-    plt.title(f"Apache Spark Execution Time for {file} with Different CSV Row Counts")
-    plt.xticks(row_counts[:len(smoothed_times)], labels=[f"{rows/1000:.0f} K" for rows in row_counts[:len(smoothed_times)]], rotation=45)
-    
-    # Add Error Bars
-    plt.errorbar(row_counts[:len(smoothed_times)], smoothed_times, yerr=np.std(times), fmt='-o', capsize=5)
-    
-    # Annotate significant points
-    max_index = np.argmax(smoothed_times)
-    plt.annotate(f'Maximum\n({row_counts[max_index]} Rows, {smoothed_times[max_index]:.2f} seconds)',
-                 xy=(row_counts[max_index], smoothed_times[max_index]),
-                 xytext=(row_counts[max_index]*0.7, smoothed_times[max_index]*0.7),
-                 arrowprops=dict(facecolor='black', shrink=0.05))
-    
-    plt.tight_layout()
-    plot_file_name = os.path.join("plots", f"{file[5:]}_plot.png")
-    plt.savefig(plot_file_name)
-    plt.close()
+filename = './csv_results/spark_execution_times_16cpu.csv'
+
+# Create the CSV file and write the header and rows
+with open(filename, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    # Write a header row
+    writer.writerow(['Test File', 'Time 1', 'Time 2', 'Time 3', 'Time 4', 'Time 5', 'Time 6', 'Time 7', 'Time 8', 'Time 9', 'Time 10'])
+
+    # Write data rows
+    for file, times in execution_times.items():
+        # Prepare the row with the file name and times
+        row = [file] + times
+        writer.writerow(row)
+
+print(f"Data successfully written to {filename}")
