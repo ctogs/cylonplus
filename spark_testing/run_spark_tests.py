@@ -9,45 +9,45 @@ import csv
 # List of Python files
 example_files = [
     "test/test_groupby.py",
-    # "test/test_head.py",
-    # "test/test_tail.py",
-    # "test/test_io.py",
+    "test/test_head.py",
+    "test/test_tail.py",
+    "test/test_io.py",
     # "test/test_difference.py",
     # "test/test_drop_duplicates.py",
     # # "test/test_intersection", #takes a very long time
     # "test/test_union.py",
     # "test/test_join.py",
-    # "test/test_shuffle.py",
-    # "test/test_sort.py",
+    "test/test_shuffle.py",
+    "test/test_sort.py",
 ]
 
 args = [
     ["Pregnancies", "4", "4"], # 4 executors, 4 CPUs each
-    # "",
-    # "",
-    # "4 4",
-    # "",
-    # "",
+    ["4", "4"],
+    ["4", "4"],
+    ["4", "4"],
+    # ["4", "4"],
+    # ["4", "4"],
     # # "Pregnancies",  #takes a very long time
-    # "",
-    # "Pregnancies",
-    # "",
-    # "Pregnancies",
+    ["4", "4"],
+    ["Pregnancies", "4", "4"],
+    ["4", "4"],
+    ["Pregnancies", "4", "4"],
 
 ]
 
 num_files = [
     1,
-    # 1,
-    # 1,
-    # 1,
+    1,
+    1,
+    1,
     # 2,
     # 1,
     # # 2,  #takes a very long time
     # 2,
     # 2,
-    # 1,
-    # 1,
+    1,
+    1,
 ]
 
 # List of CSV files
