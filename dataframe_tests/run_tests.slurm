@@ -12,7 +12,7 @@
 module purge
 module load anaconda3
 
-source activate parallel-pandas-test 
+source activate dataframe_testing
 echo "Environment activated: $(conda info --envs | grep '^*' | awk '{print $1}')"
 
 python graph_tests.py

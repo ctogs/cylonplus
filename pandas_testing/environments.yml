@@ -1,6 +1,0 @@
-name: pandas_testing
-channels:
-  - defaults
-dependencies:
-  - pandas
-  - numpy
