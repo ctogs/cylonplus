@@ -25,6 +25,10 @@ example_files = {
         # Add more test files specific to parallelpandas if needed
     ],
     # Add more dataframes here with their corresponding test files
+    # "spark": [
+    #     # "test_groupby.py",
+    #     "test_io.py",
+    # ],
 }
 
 # Dictionary of commands to run for each test file
