@@ -1,9 +1,8 @@
 from dask.distributed import Client, LocalCluster
 import dask.dataframe as dd
+import sys
 import time
-
-SORT_FILES = ["sales_nulls_nunascii_0", "sales_nulls_nunascii_1", "sales_nulls_nunascii_2", "sales_nulls_nunascii_3"]
-SORT_IDS = ["Unit Price", "Unit Price", "Unit Price", "Unit Price"]
+import numpy as np
 
 class Stopwatch:
     def __enter__(self):
@@ -13,30 +12,47 @@ class Stopwatch:
     def __exit__(self, *args):
         self.end_time = time.time()
         self.elapsed_time = self.end_time - self.start_time
-        print("Time taken for sort operation: {:.4f} seconds".format(self.elapsed_time))
 
-def perform_sort_operations():
-    # Initialize a Dask LocalCluster to fully utilize CPU cores
+def perform_sort_operations(csv_file, sort_id):
+    # Initialize a Dask LocalCluster
     cluster = LocalCluster()
     client = Client(cluster)
-    print(f"Dask Dashboard is available at: {client.dashboard_link}")
 
-    for file_name, sort_id in zip(SORT_FILES, SORT_IDS):
-        # Load CSV files into Dask dataframes
-        ddf = dd.read_csv(f'../data/mpiops/{file_name}.csv')
+    # Load CSV file into a Dask dataframe
+    ddf = dd.read_csv(csv_file)
 
+    N_RUNS = 10  # Number of times to run the test
+    WARMUP_RUNS = 5  # Number of warm-up runs
+
+    execution_times = []
+
+    # Warm-up runs
+    for _ in range(WARMUP_RUNS):
+        with Stopwatch():
+            _ = ddf.sort_values(by=sort_id).compute()
+
+    # Measure execution time for multiple runs
+    for _ in range(N_RUNS):
         with Stopwatch() as sw:
             # Perform sort operation using Dask
-            result_ddf = ddf.sort_values(by=sort_id)
-            # Compute to trigger the sort operation and get results
-            result_df = result_ddf.compute()
+            sorted_ddf = ddf.sort_values(by=sort_id)
+            _ = sorted_ddf.compute()  # Trigger computation to measure time
+        execution_times.append(sw.elapsed_time)
 
-            # Display the first few rows of the result
-            print(result_df.head())
-            print("Size of File: {:.1f} instances".format(len(result_df)))
+    # Calculate mean and standard deviation of execution times
+    mean_time = np.mean(execution_times)
+    std_dev = np.std(execution_times)
 
     # Close the Dask client once done
     client.close()
 
+    return mean_time, std_dev
+
 if __name__ == "__main__":
-    perform_sort_operations()
+    csv_file = sys.argv[1]  # Get file name from command line
+    sort_id = sys.argv[2]   # Get sort column from command line
+    mean_time, std_dev = perform_sort_operations(csv_file, sort_id)
+    
+    # Print mean time and standard deviation without extra text
+    print("{:.4f}".format(mean_time))
+    print("{:.4f}".format(std_dev))

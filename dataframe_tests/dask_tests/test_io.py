@@ -1,8 +1,8 @@
 from dask.distributed import Client, LocalCluster
 import dask.dataframe as dd
+import sys
 import time
-
-FILES = ["sales_nulls_nunascii_0", "sales_nulls_nunascii_1", "sales_nulls_nunascii_2", "sales_nulls_nunascii_3"]
+import numpy as np
 
 class Stopwatch:
     def __enter__(self):
@@ -12,24 +12,35 @@ class Stopwatch:
     def __exit__(self, *args):
         self.end_time = time.time()
         self.elapsed_time = self.end_time - self.start_time
-        print("Time taken for read input operation: {:.8f} seconds".format(self.elapsed_time))
 
-def perform_io_operations():
-    # Initialize a Dask LocalCluster to fully utilize CPU cores
+def perform_io_operations(csv_file):
+    # Initialize a Dask LocalCluster
     cluster = LocalCluster()
     client = Client(cluster)
     print(f"Dask Dashboard is available at: {client.dashboard_link}")
 
-    for file_name in FILES:
-        # Perform read input operation using Dask
-        with Stopwatch():
-            ddf = dd.read_csv(f'../data/mpiops/{file_name}.csv')
-        
+    N_RUNS = 10  # Number of times to run the test
 
-        print("Size of File: {:.1f} instances".format(ddf.shape[0].compute() ))
+    execution_times = []
+
+    # Measure execution time for multiple runs
+    for _ in range(N_RUNS):
+        with Stopwatch() as sw:
+            ddf = dd.read_csv(csv_file)
+            ddf.compute()  # Force computation to measure I/O time
+        execution_times.append(sw.elapsed_time)
+
+    # Calculate mean and standard deviation of execution times
+    mean_time = np.mean(execution_times)
+    std_dev = np.std(execution_times)
+
+    # Print mean time and standard deviation
+    print("{:.8f}".format(mean_time))
+    print("{:.8f}".format(std_dev))
 
     # Close the Dask client once done
     client.close()
 
 if __name__ == "__main__":
-    perform_io_operations()
+    csv_file = sys.argv[1]  # Get file name from command line
+    perform_io_operations(csv_file)

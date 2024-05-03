@@ -1,23 +1,8 @@
 from dask.distributed import Client, LocalCluster
 import dask.dataframe as dd
+import sys
 import time
-
-JOIN_LIST1 = [
-    "cities_a_0", "cities_a_1", "cities_a_2", "cities_a_3",
-    "csv_with_null1_0", "csv_with_null1_1", "csv_with_null1_2", "csv_with_null1_3",
-    "csv1_0", "csv1_1", "csv1_2", "csv1_3"
-]
-
-JOIN_LIST2 = [
-    "cities_b_0", "cities_b_1", "cities_b_2", "cities_b_3",
-    "csv_with_null2_0", "csv_with_null2_1", "csv_with_null2_2", "csv_with_null2_3",
-    "csv2_0", "csv2_1", "csv2_2", "csv2_3"
-]
-
-JOIN_IDS = [
-    "state_id", "state_id", "state_id", "state_id",
-    "0", "0", "0", "0", "0", "0", "0", "0"
-]
+import numpy as np
 
 class Stopwatch:
     def __enter__(self):
@@ -27,30 +12,50 @@ class Stopwatch:
     def __exit__(self, *args):
         self.end_time = time.time()
         self.elapsed_time = self.end_time - self.start_time
-        print("Time taken for join operation: {:.4f} seconds".format(self.elapsed_time))
 
-def perform_join_operations():
-    # Initialize a Dask LocalCluster to fully utilize CPU cores
+def perform_join_operations(csv_file1, csv_file2, join_id):
+    # Initialize a Dask LocalCluster
     cluster = LocalCluster()
     client = Client(cluster)
-    print(f"Dask Dashboard is available at: {client.dashboard_link}")
+    
+    # Load CSV files into Dask dataframes
+    ddf1 = dd.read_csv(csv_file1)
+    ddf2 = dd.read_csv(csv_file2)
 
-    for i in range(len(JOIN_LIST1)):
-        # Load CSV files into Dask dataframes
-        ddf1 = dd.read_csv(f'../data/input/{JOIN_LIST1[i]}.csv')
-        ddf2 = dd.read_csv(f'../data/input/{JOIN_LIST2[i]}.csv')
+    N_RUNS = 10  # Number of times to run the test
+    WARMUP_RUNS = 5  # Number of warm-up runs
 
+    execution_times = []
+
+    # Warm-up runs
+    for _ in range(WARMUP_RUNS):
+        with Stopwatch():
+            _ = ddf1.merge(ddf2, on=join_id, how='inner').compute()
+
+    # Measure execution time for multiple runs
+    for _ in range(N_RUNS):
         with Stopwatch() as sw:
-            # Perform join operation using Dask
-            result_ddf = ddf1.merge(ddf2, on=JOIN_IDS[i], how='inner')  # Adjust 'how' as needed for your join type
-            # Compute to trigger the join operation and get results
-            result_df = result_ddf.compute()
-            
+            # Perform join operation using Dask and trigger computation
+            result_ddf = ddf1.merge(ddf2, on=join_id, how='inner')
+            _ = result_ddf.compute()
+        execution_times.append(sw.elapsed_time)
 
-        print(result_df.head())
+    # Calculate mean and standard deviation of execution times
+    mean_time = np.mean(execution_times)
+    std_dev = np.std(execution_times)
 
     # Close the Dask client once done
     client.close()
 
+    return mean_time, std_dev
+
 if __name__ == "__main__":
-    perform_join_operations()
+    csv_file1 = sys.argv[1]
+    csv_file2 = sys.argv[2]
+    join_id = sys.argv[3]
+    
+    mean_time, std_dev = perform_join_operations(csv_file1, csv_file2, join_id)
+    
+    # Print mean time and standard deviation without extra text
+    print("{:.4f}".format(mean_time))
+    print("{:.4f}".format(std_dev))

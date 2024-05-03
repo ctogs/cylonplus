@@ -1,12 +1,8 @@
 from dask.distributed import Client, LocalCluster
 import dask.dataframe as dd
+import sys
 import time
-
-SHUFFLE_FILES = [
-    "cities_a_0", "cities_a_1", "cities_a_2", "cities_a_3",
-    "csv_with_null1_0", "csv_with_null1_1", "csv_with_null1_2", "csv_with_null1_3",
-    "csv1_0", "csv1_1", "csv1_2", "csv1_3", "user_device_tm_1"
-]
+import numpy as np
 
 class Stopwatch:
     def __enter__(self):
@@ -16,28 +12,46 @@ class Stopwatch:
     def __exit__(self, *args):
         self.end_time = time.time()
         self.elapsed_time = self.end_time - self.start_time
-        print("Time taken for shuffle operation: {:.4f} seconds".format(self.elapsed_time))
 
-def perform_shuffle_operations():
-    # Initialize a Dask LocalCluster to fully utilize CPU cores
+def perform_shuffle_operations(csv_file):
+    # Initialize a Dask LocalCluster
     cluster = LocalCluster()
     client = Client(cluster)
-    print(f"Dask Dashboard is available at: {client.dashboard_link}")
 
-    for file_name in SHUFFLE_FILES:
-        # Load CSV files into Dask dataframes
-        ddf = dd.read_csv(f'../data/input/{file_name}.csv')
+    # Load CSV file into a Dask dataframe
+    ddf = dd.read_csv(csv_file)
 
+    N_RUNS = 10  # Number of times to run the test
+    WARMUP_RUNS = 5  # Number of warm-up runs
+
+    execution_times = []
+
+    # Warm-up runs
+    for _ in range(WARMUP_RUNS):
+        with Stopwatch():
+            _ = ddf.sample(frac=1).persist()
+
+    # Measure execution time for multiple runs
+    for _ in range(N_RUNS):
         with Stopwatch() as sw:
             # Perform shuffle operation using Dask
             shuffled_ddf = ddf.sample(frac=1).persist()
-            
-            # Display the first few rows of the result
-            print(shuffled_ddf.head())
-            print("Size of File: {:.1f} instances".format(len(shuffled_ddf)))
+            _ = shuffled_ddf.compute()  # Trigger computation to measure time
+        execution_times.append(sw.elapsed_time)
+
+    # Calculate mean and standard deviation of execution times
+    mean_time = np.mean(execution_times)
+    std_dev = np.std(execution_times)
 
     # Close the Dask client once done
     client.close()
 
+    return mean_time, std_dev
+
 if __name__ == "__main__":
-    perform_shuffle_operations()
+    csv_file = sys.argv[1]  # Get file name from command line
+    mean_time, std_dev = perform_shuffle_operations(csv_file)
+    
+    # Print mean time and standard deviation without extra text
+    print("{:.4f}".format(mean_time))
+    print("{:.4f}".format(std_dev))

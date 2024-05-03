@@ -1,9 +1,8 @@
 from dask.distributed import Client, LocalCluster
 import dask.dataframe as dd
+import sys
 import time
-
-FILES = ["cities_a_0", "cities_a_1", "cities_a_2", "cities_a_3", "csv_with_null1_0", "csv_with_null1_1", "csv_with_null1_2", "csv_with_null1_3", "csv1_0", "csv1_1", "csv1_2", "csv1_3"]
-GROUP_IDS = ["state_id", "state_id", "state_id", "state_id", "0", "0", "0", "0", "0", "0", "0", "0"]
+import numpy as np
 
 class Stopwatch:
     def __enter__(self):
@@ -13,22 +12,42 @@ class Stopwatch:
     def __exit__(self, *args):
         self.end_time = time.time()
         self.elapsed_time = self.end_time - self.start_time
-        print("Time taken for groupby operation: {:.4f} seconds".format(self.elapsed_time))
 
 if __name__ == "__main__":
-    # Initialize a Dask LocalCluster to take full advantage of CPU cores
+    # Read command line arguments
+    csv_file = sys.argv[1] 
+    group_id = sys.argv[2]
+
+    # Initialize a Dask LocalCluster
     cluster = LocalCluster(n_workers=4, threads_per_worker=4)  # Adjust based on system's capabilities
     client = Client(cluster)
-    print(f"Dask Dashboard is available at: {client.dashboard_link}")
 
-    for file_name, group_id in zip(FILES, GROUP_IDS):
-        # Load CSV files into Dask dataframes
-        ddf = dd.read_csv(f'../data/input/{file_name}.csv')
-        # Show the first few rows (compute is necessary because Dask is lazy)
-        print(ddf.head())
+    # Load CSV file into a Dask dataframe
+    ddf = dd.read_csv(csv_file)
 
+    N_RUNS = 10  # Number of times to run the test
+    WARMUP_RUNS = 5  # Number of warm-up runs
+
+    execution_times = []
+
+    # Warm-up runs
+    for _ in range(WARMUP_RUNS):
+        with Stopwatch():
+            _ = ddf.groupby(group_id).size().compute()
+
+    # Measure execution time for multiple runs
+    for _ in range(N_RUNS):
         with Stopwatch() as sw:
+            # Perform groupby operation and compute result
             result_ddf = ddf.groupby(group_id).size().compute()
-        # print(result_ddf)
+        execution_times.append(sw.elapsed_time)
+
+    # Calculate mean and standard deviation of execution times
+    mean_time = np.mean(execution_times)
+    std_dev = np.std(execution_times)
+
+    # Print mean time and standard deviation
+    print("{:.4f}".format(mean_time))
+    print("{:.4f}".format(std_dev))
 
     client.close()
