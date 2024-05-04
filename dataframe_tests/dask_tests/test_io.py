@@ -17,7 +17,6 @@ def perform_io_operations(csv_file):
     # Initialize a Dask LocalCluster
     cluster = LocalCluster()
     client = Client(cluster)
-    print(f"Dask Dashboard is available at: {client.dashboard_link}")
 
     N_RUNS = 10  # Number of times to run the test
 
