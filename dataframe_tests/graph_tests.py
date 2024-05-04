@@ -48,11 +48,11 @@ test_files = {
 csv_files = [
     "../data/benchmarking_data_10000.csv",
     "../data/benchmarking_data_5000000.csv",
-    # "data/benchmarking_data_10000000.csv",
-    # "data/benchmarking_data_25000000.csv",
-    # "data/benchmarking_data_50000000.csv",
-    # "data/benchmarking_data_75000000.csv",
-    # "data/benchmarking_data_100000000.csv",
+    "../data/benchmarking_data_10000000.csv",
+    "../data/benchmarking_data_25000000.csv",
+    "../data/benchmarking_data_50000000.csv",
+    "../data/benchmarking_data_75000000.csv",
+    "../data/benchmarking_data_100000000.csv",
 ]
 
 # List of row counts
