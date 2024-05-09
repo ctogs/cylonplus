@@ -17,17 +17,20 @@ dataframes = {
 example_files = {
     "pandas": [
         # "test_groupby.py",
-        "test_io.py",
+        "test_shuffle.py"
+        # "test_io.py",
         # Add more test files specific to pandas if needed
     ],
     "parallelpandas": [
         # "test_groupby.py",
-        "test_io.py",
+        "test_shuffle.py"
+        # "test_io.py",
         # Add more test files specific to parallelpandas if needed
     ],
     "dask": [
         # "test_groupby.py",
-        "test_io.py",
+        "test_shuffle.py"
+        # "test_io.py",
         # Add more test files specific to parallelpandas if needed
     ],
     # Add more dataframes here with their corresponding test files
@@ -40,7 +43,8 @@ example_files = {
 # Dictionary of commands to run for each test file
 test_files = {
     # "test_groupby.py": ["Pregnancies"],
-    "test_io.py": [""],
+    # "test_io.py": [""],
+    "test_shuffle.py": [],
     # Add more test files with their commands if needed
 }
 
