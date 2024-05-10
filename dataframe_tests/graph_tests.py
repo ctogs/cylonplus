@@ -9,7 +9,8 @@ import numpy as np
 dataframes = {
     "pandas": "pandas_tests",
     "parallelpandas": "parallelpandas_tests",
-    "dask": "dask_tests"
+    "dask": "dask_tests",
+    "spark": "spark_tests"
     # Add more dataframes here if needed
 }
 
@@ -34,17 +35,18 @@ example_files = {
         # Add more test files specific to parallelpandas if needed
     ],
     # Add more dataframes here with their corresponding test files
-    # "spark": [
-    #     # "test_groupby.py",
-    #     "test_io.py",
-    # ],
+    "spark": [
+        # "test_groupby.py",
+        # "test_io.py",
+        "test_shuffle.py",
+    ],
 }
 
 # Dictionary of commands to run for each test file
 test_files = {
     # "test_groupby.py": ["Pregnancies"],
     # "test_io.py": [""],
-    "test_shuffle.py": [],
+    "test_shuffle.py": [""],
     # Add more test files with their commands if needed
 }
 
