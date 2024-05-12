@@ -1,10 +1,12 @@
-
 import cudf as pd
 import time
+import sys
+import numpy as np
 
-FILES = ["cities_a_0", "cities_a_1", "cities_a_2", "cities_a_3", "csv_with_null1_0", "csv_with_null1_1", "csv_with_null1_2", "csv_with_null1_3", "csv1_0", "csv1_1", "csv1_2", "csv1_3"]
+N_CPU = 16
+SPLIT_FACTOR = 4
 
-GROUP_IDS = ["state_id","state_id","state_id","state_id","0","0","0","0","0","0","0","0"]
+ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
     def __enter__(self):
@@ -16,14 +18,35 @@ class Stopwatch:
         self.elapsed_time = self.end_time - self.start_time
 
 if __name__ == "__main__":
-    # Start stopwatch
-    for i in range(len(FILES)):
-            # Load CSV files into pandas dataframes
-        df1 = pd.read_csv(f'../data/input/{FILES[i]}.csv')
-        print(df1.head())
+
+    # Get file and group_id input
+    csv_file = sys.argv[1]
+    group_id = sys.argv[2]
+
+    # Load CSV file into a pandas dataframe
+    df1 = pd.read_csv(csv_file)
+
+    N_RUNS = 10  # Number of times to run the test
+    WARMUP_RUNS = 5  # Number of warm-up runs
+
+    execution_times = []
+
+    # Warm-up runs
+    for _ in range(WARMUP_RUNS):
+        with Stopwatch():
+            result_df = df1.groupby(group_id)
+
+    # Measure execution time for multiple runs
+    for _ in range(N_RUNS):
         with Stopwatch() as sw:
             # Perform groupby operation
-            result_df = df1.groupby(GROUP_IDS[i])
+            result_df = df1.groupby(group_id)
+        execution_times.append(sw.elapsed_time)
 
-        # Print time taken for groupby operation
-        print("Time taken for groupby operation: {:.4f} seconds".format(sw.elapsed_time))
+    # Calculate mean and standard deviation of execution times
+    mean_time = np.mean(execution_times)
+    std_dev = np.std(execution_times)
+
+    # Print mean time and standard deviation
+    print("{:.4f}".format(mean_time))
+    print("{:.4f}".format(std_dev))

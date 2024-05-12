@@ -4,6 +4,7 @@ import sys
 
 N_CPU = 16
 SPLIT_FACTOR = 4
+
 ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
@@ -15,16 +16,15 @@ class Stopwatch:
         self.end_time = time.time()
         self.elapsed_time = self.end_time - self.start_time
 
-# Function to perform join operation
-def perform_join(df1, df2, common_column):
-    return pd.merge(df1, df2, on=common_column)
+# Function to perform difference operation
+def perform_difference(df1, df2):
+    return df1[~df1.index.isin(df2.index)]
 
 if __name__ == "__main__":
 
     #get file and group_id input:
     csv_file1 = sys.argv[1]
     csv_file2 = sys.argv[2]
-    join_id = sys.argv[3]
 
     # Load CSV files into pandas dataframes
     df1 = pd.read_csv(f'{csv_file1}')
@@ -33,9 +33,7 @@ if __name__ == "__main__":
     #Start stopwatch
     with Stopwatch() as sw:
         # Perform difference operation
-        result_df = perform_join(df1, df2, join_id)
+        diff_df = perform_difference(df1, df2)
 
     # Print time taken for groupby operation
     print("{:.4f}".format(sw.elapsed_time))
-    
-   

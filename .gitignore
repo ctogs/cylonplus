@@ -162,3 +162,4 @@ cython_debug/
 
 
 dataframe_tests/data/*
+dataframe_tests/scratch/*

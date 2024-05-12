@@ -1,9 +1,13 @@
 name: dataframe_testing
 channels:
   - conda-forge
+  - rapidsai
+  - nvidia
   - defaults
 dependencies:
   - python=3.9
+  - cudf=22
+  - cudatoolkit=11.5
   - dask
   - matplotlib=3.8.0
   - pandas=2.2.2

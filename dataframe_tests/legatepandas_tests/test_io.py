@@ -1,12 +1,10 @@
-import cudf as pd
+import legate.pandas as pd
 import time
 import sys
-import numpy as np
+import cunumeric as np
 
 N_CPU = 16
 SPLIT_FACTOR = 4
-
-ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
 
 class Stopwatch:
     def __enter__(self):
