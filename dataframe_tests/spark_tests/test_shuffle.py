@@ -18,7 +18,7 @@ def perform_shuffle(csv_file):
     spark = SparkSession.builder \
         .appName("ShuffleBenchmark") \
         .config("spark.executor.instances", '4') \
-        .config("spark.executor.cores", '4') \
+        .config("spa4rk.executor.cores", '4') \
         .config("spark.executor.memory", '4g') \
         .getOrCreate()
 

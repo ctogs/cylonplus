@@ -1,0 +1,1 @@
+Currently this folder supports strong scaling for dataframes that run on CPU (ParallelPandas, Pandas). The slurm scripts perform strong scaling, with core #s of 1, 2, 4, 8, 16, 32, and 40. Run ```sbatch submit_scaling.sh``` to run these tests.

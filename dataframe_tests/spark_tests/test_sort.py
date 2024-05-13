@@ -14,15 +14,15 @@ class Stopwatch:
 if __name__ == "__main__":
     csv_file = sys.argv[1]
     sort_id = sys.argv[2]
-    num_cpus = int(sys.argv[3]) 
-    num_executors = int(sys.argv[4]) 
-    executor_memory = sys.argv[5] if len(sys.argv) > 5 else '4g'
+    # num_cpus = int(sys.argv[3]) 
+    # num_executors = int(sys.argv[4]) 
+    # executor_memory = sys.argv[5] if len(sys.argv) > 5 else '4g'
 
     spark = SparkSession.builder \
         .appName("SortBenchmark") \
-        .config("spark.executor.instances", num_executors) \
-        .config("spark.executor.cores", num_cpus) \
-        .config("spark.executor.memory", executor_memory) \
+        .config("spark.executor.instances", '4') \
+        .config("spark.executor.cores", '4') \
+        .config("spark.executor.memory", '4g') \
         .getOrCreate()
 
 

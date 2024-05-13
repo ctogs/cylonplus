@@ -4,11 +4,6 @@ from parallel_pandas import ParallelPandas
 import sys
 import numpy as np
 
-N_CPU = 16
-SPLIT_FACTOR = 4
-
-ParallelPandas.initialize(n_cpu=N_CPU, split_factor=SPLIT_FACTOR, disable_pr_bar=True)
-
 class Stopwatch:
     def __enter__(self):
         self.start_time = time.time()
@@ -22,6 +17,11 @@ if __name__ == "__main__":
 
     # Get file input
     csv_file = sys.argv[1]
+    ncores = int(sys.argv[3])
+    split = int(sys.argv[4])
+    ncpu = ncores * split
+
+    ParallelPandas.initialize(n_cpu=ncpu, split_factor=split, disable_pr_bar=True)
 
     # List to store elapsed times
     elapsed_times = []
