@@ -1,0 +1,27 @@
+---
+title: "Cylon Research Meeting Minutes"
+date: 2024-5-13
+weight: 2
+---
+## Deliverables
+* [gitrepo](https://github.com/laszewsk/osmi)
+* report (TBD)
+* paper (TBD)
+## Teams and Tasks Performed
+### For Alex Yung, Collin Togher
+ 1. Fix gcylon build on rivanna, then pass that on ci workflow, submit those changes to a new PR. 
+ 2. Fix CI build in build.py: for conda, cpu, etc
+ 3. For build.sh: for cpu and gpu
+ 4. Examine arup's PR 688 and try to fix any errors that occur during our build.
+### For Prabhath, Alexander:
+ 1. Work on Proposal: Link
+### For Yafet:
+ 1. Learn about Cylon through a meeting with Alex and Collin
+## Code
+ 1. https://github.com/ctogs/cylonplus/tree/pandas-test
+## Results
+ 2. https://github.com/cylondata/cylon/pull/688/checks
+## References
+1. TBD [Radical Pilot Project Proposal Github Link]
+## Participants
+Alex, Collin, Prabhath, Alexander, Yafet, Arup
